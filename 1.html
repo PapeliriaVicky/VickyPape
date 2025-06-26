@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Papelería Vicky - Ingreso</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at 50% 50%, #4b0082, #000080);
+      background-size: 400% 400%;
+      animation: moverFondo 20s ease infinite;
+    }
+
+    @keyframes moverFondo {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .login-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      width: 340px;
+      margin: 100px auto;
+      padding: 30px;
+      border: 3px solid #4b0082;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(75, 0, 130, 0.7);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      font-size: 28px;
+      background: linear-gradient(to right, #4b0082, #6a5acd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 4px #000000;
+      margin-bottom: 25px;
+    }
+
+    .login-container select,
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 2px solid #6a5acd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .login-container input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #6a5acd, #4b0082);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-size: 16px;
+    }
+
+    .login-container input[type="submit"]:hover {
+      background: linear-gradient(to right, #4b0082, #6a5acd);
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Papelería Vicky</h2>
+    <form onsubmit="return validarIngreso()">
+      <select id="usuario" required>
+        <option value="" disabled selected>Selecciona tu usuario</option>
+        <option value="Claudia Berrios">Claudia Berrios</option>
+        <option value="Vicky">Vicky</option>
+        <option value="Ivan Cortes">Ivan Cortes</option>
+      </select>
+      <input type="password" id="contrasena" placeholder="Contraseña" required />
+      <input type="submit" value="Entrar" />
+      <p class="error" id="mensaje-error"></p>
+    </form>
+  </div>
+
+  <script>
+    const usuariosValidos = {
+      "Claudia Berrios": "12345",
+      "Vicky": "2015",
+      "Ivan Cortes": "SigloIV"
+    };
+
+    function validarIngreso() {
+      const usuario = document.getElementById("usuario").value;
+      const contrasena = document.getElementById("contrasena").value.trim();
+      const mensajeError = document.getElementById("mensaje-error");
+
+      if (usuariosValidos[usuario] === contrasena) {
+        window.location.href = "2.Html";
+        return false;
+      } else {
+        mensajeError.textContent = "Usuario o contraseña incorrectos.";
+        return false;
+      }
+    }
+  </script>
+</body>
+</html>

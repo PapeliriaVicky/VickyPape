@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ticket de Compra - Papelería Vicky</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f5ff;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ticket {
+      background-color: #fff;
+      border: 2px solid #e0c7f3;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      color: #7a28b4;
+      margin-bottom: 5px;
+    }
+
+    .line {
+      border-top: 1px dashed #7a28b4;
+      margin: 10px 0;
+    }
+
+    .item, .totals {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+
+    .footer {
+      display: none;
+    }
+
+    .form-section {
+      margin-top: 25px;
+      background-color: #f3e6ff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #e0c7f3;
+      border-radius: 4px;
+      background-color: #fcf7ff;
+    }
+
+    button {
+      background-color: #9b4edd;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      width: 100%;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #842cc9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ticket">
+    <h2>Papelería Vicky</h2>
+    <p style="text-align:center;">¡Gracias por su preferencia!</p>
+    <div class="line"></div>
+    <p><strong>Nombre del Cliente:</strong> <span id="clienteNombre"></span></p>
+    <p><strong>Fecha:</strong> <span id="fechaHoy"></span></p>
+    <div class="line"></div>
+
+    <div id="items"></div>
+
+    <div class="line"></div>
+    <div class="totals"><strong>Subtotal:</strong><span id="subtotal">$0.00</span></div>
+    <div class="totals"><strong>IVA (16%):</strong><span id="iva">$0.00</span></div>
+    <div class="totals"><strong>Total:</strong><span id="total">$0.00</span></div>
+    <div class="line"></div>
+
+    <div class="footer"></div>
+
+    <div class="form-section">
+      <h3>Agregar Producto</h3>
+
+      <input type="text" id="nombreCliente" placeholder="Nombre del Cliente" oninput="mostrarNombreCliente()">
+
+      <select id="producto">
+        <option value="" disabled selected>Seleccionar producto...</option>
+      </select>
+
+      <button onclick="agregarProducto()">Agregar al Ticket</button>
+      <button onclick="imprimirConAgradecimiento()">Imprimir Ticket</button>
+    </div>
+  </div>
+
+  <script>
+    const productos = {
+      "Libretas escolares": 25.00,
+      "Plumas, lápices y colores": 60.00,
+      "Servicios de impresión y copias": 1.00,
+      "Material de arte": 250.00,
+      "Grapas cont.1000 No.400": 26.00,
+      "Pegamento Blanco": 34.00,
+      "Plastilina Modelina Cont. 10 Piezas": 26.00,
+      "Postit`s de Colores": 24.00,
+      "Borrador": 28.00,
+      "Crayones Jumbo Cont.10 Piezas": 65.00,
+      "Kit de Geometría Cont. 5 Piezas": 85.00,
+      "Marcadores Lavables Doble Punta Cont. 10 Plumones 20 Colores": 95.00,
+      "Marcadores Grafigel Cont. 8 Piezas": 95.00,
+      "Regla Profesional de 30cm": 24.00,
+      "Pistola de silicón": 65.00,
+      "Mini Engrapadora": 42.00,
+      "Calculadora Cientifica": 110.00,
+      "Acuarela Infantil": 22.00,
+      "Perforadora": 48.00,
+      "Crayones Jumbo Cont. 28 Piezas": 125.00,
+      "Pegamento Universal": 42.00,
+      "Super Color": 72.00,
+      "Pintura Acrilica Politec": 82.00,
+      "Lápices de colores Shely Cont. 12+2 Piezas": 68.00,
+      "Chinchetas Metálicas Cont. 100 Piezas": 16.00
+    };
+
+    let subtotal = 0;
+
+    const productoSelect = document.getElementById("producto");
+    for (const [nombre, precio] of Object.entries(productos)) {
+      const option = document.createElement("option");
+      option.value = nombre;
+      option.textContent = `${nombre} - $${precio.toFixed(2)}`;
+      productoSelect.appendChild(option);
+    }
+
+    function mostrarNombreCliente() {
+      const nombre = document.getElementById("nombreCliente").value;
+      document.getElementById("clienteNombre").textContent = nombre;
+    }
+
+    function agregarProducto() {
+      const productoNombre = document.getElementById("producto").value;
+      const precio = productos[productoNombre];
+
+      if (!productoNombre || !precio) {
+        alert("Seleccione un producto válido.");
+        return;
+      }
+
+      const itemsDiv = document.getElementById("items");
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "item";
+      itemDiv.innerHTML = `<span>${productoNombre}</span><span>$${precio.toFixed(2)}</span>`;
+      itemsDiv.appendChild(itemDiv);
+
+      subtotal += precio;
+      const iva = subtotal * 0.16;
+      const total = subtotal + iva;
+
+      document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById("iva").textContent = `$${iva.toFixed(2)}`;
+      document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+
+      document.getElementById("producto").selectedIndex = 0;
+    }
+
+    function imprimirConAgradecimiento() {
+      window.print();
+      setTimeout(() => {
+        alert(":) Gracias por su compra y confianza a nuestro servicio :)");
+      }, 500);
+    }
+
+    document.getElementById("fechaHoy").textContent = new Date().toLocaleDateString("es-MX");
+  </script>
+
+</body>
+</html>
